@@ -1,0 +1,28 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>330</x><y>380</y><w>280</w><h>190</h></coordinates><panel_attributes>
+Class::Order
+--
+- company: std::string 
+- volume: int
+- side: Side
+- price: double
+- timestamp: std::time_t
+--
+No Methods
+--
+Responsibilities
+- Maintains state of a single Buy/Sell Order</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>640</x><y>470</y><w>210</w><h>80</h></coordinates><panel_attributes>
+Enum::Side
+--
+- BUY
+- SELL
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>380</x><y>140</y><w>410</w><h>190</h></coordinates><panel_attributes>
+template &lt;typename company&gt;
+Class::OrderBook
+--
+- company: string
+- orders: std::vector&lt;Order&gt;
+--
+No Methods
+--
+Responsibilities
+-- Maintains all orders for a specific company indicated by template</panel_attributes><additional_attributes></additional_attributes></element></diagram>
