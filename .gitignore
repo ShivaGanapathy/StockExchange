@@ -1,6 +1,7 @@
 .DS_Store
 .a
 .o
+.sh
 .vscode/
 /build
 
