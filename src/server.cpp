@@ -1,0 +1,9 @@
+#pragma once
+
+#include <iostream>
+
+using namespace std;
+
+int main() {
+    std::cout << "Hello world" << std::endl;
+}
