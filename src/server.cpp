@@ -15,20 +15,17 @@ int main() {
     buffer << t.rdbuf();
     t.close();
 
-    // create an unordered map with a symbol as the key and an OrderBook for each symbol as the value
-    std::unordered_map<std::string, int> orderBooks;
+    // Create an unordered map with a symbol as the key and an OrderBook for each symbol as the value
+    std::unordered_map<std::string, OrderBook> orderBooks;
+
+    
+    // Populate map by creating OrderBooks for each symbol
     std::string symbol;
+    while (std::getline(buffer, symbol, '\n')) {
+        OrderBook book(symbol);
+        orderBooks[symbol] = book;
+        
+    }
 
     
-    Order order;
-    
-    // std::string line;
-    // while (std::getline(buffer, line, '\n')) {
-    //     orderBooks[line.str] = OrderBook(line);
-    // }
-
-    //test the unordered map by printing the symbols and their associated OrderBooks
-    // for (const auto& [symbol, orderBook] : orderBooks) {
-    //     std::cout << symbol << ": " << orderBook.m_symbol << std::endl;
-    // }
 }

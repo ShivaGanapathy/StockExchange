@@ -5,9 +5,10 @@
 #include "order.h"
 
 class OrderBook {
-    int m_symbol;
-    std::vector<Order> m_orders;
     public:
+        std::string m_symbol;
+        std::vector<Order> m_orders;
         OrderBook();
-        OrderBook(int symbol);
+        OrderBook(std::string symbol);
+        OrderBook(const OrderBook& other);
 };

@@ -1,15 +1,10 @@
 #include <ctime>
 #include <string>
 #include <iostream>
+#include "order.h"
 #include "side.h"
 
-
-class Order {
-    public:
-        std::string symbol;
-        int volume;
-        Side side;
-        double price;
-        std::time_t timestamp;
-        Order () {std::cout << "order cons";}
-};
+Order::Order()
+{
+    std::cout << "Order constructor called" << std::endl;
+}
