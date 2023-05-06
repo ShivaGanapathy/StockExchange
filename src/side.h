@@ -1,3 +1,7 @@
 #pragma once
 
-enum class Side;
+enum class Side {
+    Buy,
+    Sell
+};
+

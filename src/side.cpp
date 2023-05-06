@@ -1,1 +1,1 @@
-enum class Side {BUY, SELL};
+#include "side.h"

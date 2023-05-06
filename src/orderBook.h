@@ -11,4 +11,7 @@ class OrderBook {
         OrderBook();
         OrderBook(std::string symbol);
         OrderBook(const OrderBook& other);
+        void addOrder(Order order);
+        void cancelOrder(Order order);
+        int numOrders();
 };

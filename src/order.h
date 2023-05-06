@@ -6,10 +6,11 @@
 
 class Order {
 public:
-    std::string symbol;
-    int volume;
-    Side side;
-    double price;
-    std::time_t timestamp;
-    Order();
+    std::string m_symbol;
+    int m_volume;
+    Side m_side;
+    double m_price;
+    std::time_t m_timestamp;
+    Order(std::string symbol, int volume, Side side, double price, std::time_t timestamp );
+    bool operator==(const Order& other) const;
 };

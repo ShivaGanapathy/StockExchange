@@ -3,8 +3,10 @@
 #include <unordered_map>
 #include <string>
 #include <sstream>
+#include <ctime>
 #include "orderBook.h"
 #include "order.h"
+#include "side.h"
 
 
 int main() {
@@ -26,6 +28,19 @@ int main() {
         orderBooks[symbol] = book;
         
     }
+
+    // Try creating a new Order
+    Order order("AAPL", 10, Side::Buy, 50.14, std::time(nullptr) );
+
+    // Try adding an order into an orderBook
+    orderBooks["AAPL"].addOrder(order);
+
+    // Try removing and order from the orderBook
+    orderBooks["AAPL"].cancelOrder(order);
+
+
+
+    
 
     
 }
