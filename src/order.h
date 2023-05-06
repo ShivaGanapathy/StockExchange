@@ -1,8 +1,8 @@
-#include <ctime>
-#include <string>
-#include <iostream>
-#include "side.h"
+#pragma once
 
+#include <string>
+#include <ctime>
+#include "side.h"
 
 class Order {
     public:
@@ -11,5 +11,5 @@ class Order {
         Side side;
         double price;
         std::time_t timestamp;
-        Order () {std::cout << "order cons";}
+        Order();
 };
