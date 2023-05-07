@@ -18,7 +18,6 @@ using ip::tcp;
 
 
 int main() {
-    std::cout << "Hello world" << std::endl;
     // Read all ticker symbols and create and create a mapping of symbol to orderbook for each one
     std::ifstream t("../data/symbols.txt");
     std::stringstream buffer;
@@ -40,7 +39,7 @@ int main() {
     }
 
     // Try creating a new Order
-    Order order("AAPL", 10, Side::Buy, 50.14, "today lol" );
+    Order order("AAPL", 10, Side::Buy, 50.14, "NOW" );
 
     // Try adding an order into an orderBook
     orderBooks["AAPL"].addOrder(order);

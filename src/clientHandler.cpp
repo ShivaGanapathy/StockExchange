@@ -20,7 +20,7 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
 
             // Handle the received message
             std::string message(data, length);
-            std::cout << "Received: " << message << std::endl;
+            //std::cout << "Received: " << message << std::endl;
             std::vector<std::string> substrings;
             std::istringstream iss(message);
             std::string substring;

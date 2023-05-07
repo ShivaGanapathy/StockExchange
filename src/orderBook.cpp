@@ -32,3 +32,14 @@ void OrderBook::cancelOrder(Order order) {
 int OrderBook::numOrders() {
     return m_orders.size();
 }
+
+std::ostream& operator<<(std::ostream& os, const OrderBook& ob) {
+    os << ob.m_symbol << " Orders:\n";
+    for (const auto& order : ob.m_orders) {
+        os << order;
+    }
+    os << "\n";
+    return os;
+}
+
+

@@ -27,7 +27,7 @@ int main() {
         // Print the response from the server
         std::cout << "Response: " << std::string(response, response + length) << std::endl;
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::this_thread::sleep_for(std::chrono::seconds(10));
         
 
     }

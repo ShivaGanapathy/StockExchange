@@ -14,4 +14,5 @@ class OrderBook {
         void addOrder(Order order);
         void cancelOrder(Order order);
         int numOrders();
+        friend std::ostream& operator<<(std::ostream& os, const OrderBook& book);
 };

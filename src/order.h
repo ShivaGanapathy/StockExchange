@@ -13,4 +13,5 @@ public:
     std::string m_timestamp;
     Order(std::string symbol, int volume, Side side, double price, std::string timestamp );
     bool operator==(const Order& other) const;
+    friend std::ostream& operator<<(std::ostream& os, const Order& order);
 };
