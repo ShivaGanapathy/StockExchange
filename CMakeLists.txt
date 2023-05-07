@@ -14,6 +14,8 @@ set(SERVER_SOURCES
     ../src/side.cpp
     ../src/order.cpp
     ../src/orderBook.cpp
+    ../src/clientHandler.cpp
+    ../src/matchingEngine.cpp
     ../src/server.cpp
 )
 
