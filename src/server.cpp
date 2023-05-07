@@ -11,6 +11,7 @@
 #include "order.h"
 #include "side.h"
 #include "clientHandler.h"
+#include "matchingEngine.h"
 
 using namespace boost::asio;
 using ip::tcp;
@@ -30,10 +31,12 @@ int main() {
     
     // Populate map by creating OrderBooks for each symbol
     std::string symbol;
+    std::vector<std::thread> threads;
     while (std::getline(buffer, symbol, '\n')) {
         OrderBook book(symbol);
         orderBooks[symbol] = book;
-        
+        // For each symbol, spin up a matching engine thread
+        threads.emplace_back(std::thread(matching_engine, std::ref(orderBooks[symbol])));
     }
 
     // Try creating a new Order
@@ -41,9 +44,6 @@ int main() {
 
     // Try adding an order into an orderBook
     orderBooks["AAPL"].addOrder(order);
-
-    // Try removing and order from the orderBook
-    orderBooks["AAPL"].cancelOrder(order);
 
     // Begin TCP server
     // Create an IO context
@@ -61,11 +61,17 @@ int main() {
         acceptor.accept(socket);
 
         // Handle the connection in a separate thread
-        std::thread(handle_connection, std::move(socket), std::move(orderBooks)).detach();
+        std::thread(handle_connection, std::move(socket), std::ref(orderBooks)).detach();
     }
 
     // Join the thread
     th.join();
+
+
+    // Join the threads
+    for (auto& t : threads) {
+        t.join();
+    }
 
 
     

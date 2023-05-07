@@ -6,7 +6,7 @@
 #include <string>
 
 
-void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<std::string, OrderBook> orderBooks)
+void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<std::string, OrderBook>& orderBooks)
 {
     try {
         while (true) {
@@ -34,7 +34,7 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
                 std::string code = substring.substr(0, pos);
                 // Extract the substring after the "=" character
                 std::string value = substring.substr(pos + 1);
-                std::cout << "code: " << code << " value: " << value  << std::endl;
+                
                 fix_mapping[code] = value;
 
             }
