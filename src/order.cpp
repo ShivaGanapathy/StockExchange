@@ -4,7 +4,7 @@
 #include "order.h"
 #include "side.h"
 
-Order::Order(std::string symbol, int volume, Side side, double price, std::time_t timestamp )
+Order::Order(std::string symbol, int volume, Side side, double price, std::string timestamp )
     : m_symbol(symbol), m_volume(volume), m_side(side), m_price(price), m_timestamp(timestamp)
 {
     std::cout << "Order constructor called" << std::endl;

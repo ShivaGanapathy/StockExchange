@@ -37,7 +37,7 @@ int main() {
     }
 
     // Try creating a new Order
-    Order order("AAPL", 10, Side::Buy, 50.14, std::time(nullptr) );
+    Order order("AAPL", 10, Side::Buy, 50.14, "today lol" );
 
     // Try adding an order into an orderBook
     orderBooks["AAPL"].addOrder(order);
@@ -61,14 +61,12 @@ int main() {
         acceptor.accept(socket);
 
         // Handle the connection in a separate thread
-        std::thread(handle_connection, std::move(socket)).detach();
+        std::thread(handle_connection, std::move(socket), std::move(orderBooks)).detach();
     }
 
     // Join the thread
     th.join();
 
-
-    
 
     
 }
