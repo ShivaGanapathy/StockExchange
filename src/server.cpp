@@ -35,7 +35,8 @@ int main() {
         OrderBook book(symbol);
         orderBooks[symbol] = book;
         // For each symbol, spin up a matching engine thread
-        threads.emplace_back(std::thread(matching_engine, std::ref(orderBooks[symbol])));
+        auto x = std::ref(orderBooks[symbol]);
+        threads.emplace_back(std::thread(matching_engine, x ));
     }
 
     // Try creating a new Order

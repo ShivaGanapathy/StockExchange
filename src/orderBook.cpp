@@ -25,9 +25,12 @@ OrderBook::OrderBook(const OrderBook& other) {
     m_sell_orders_pq = other.m_sell_orders_pq;
 };
 
-int OrderBook::addOrder(Order order) {
+int OrderBook::addOrder(Order order, bool keep_id) {
 
-    order.setId(m_current_id);
+    // When adding from client, this should execute. When adding from matching engine, this shouldn't
+    if (!keep_id) {
+        order.setId(m_current_id);
+    }
 
     if (order.m_side == Side::Buy) {
         m_buy_orders_vector.push_back(order);
@@ -58,6 +61,21 @@ void OrderBook::cancelOrder(Order order) {
     m_canceled_order_ids.insert(order.m_id);
 
     std::cout << "We cancelled the order with id " << std::to_string(order.m_id);
+
+    
+};
+
+void OrderBook::removeOrder(Order order) {
+
+    if (order.m_side == Side::Buy) {
+        auto it = std::remove(m_buy_orders_vector.begin(), m_buy_orders_vector.end(), order);
+        m_buy_orders_vector.erase(it, m_buy_orders_vector.end());
+        
+    }
+    else {
+        auto it = std::remove(m_sell_orders_vector.begin(), m_sell_orders_vector.end(), order);
+        m_sell_orders_vector.erase(it, m_sell_orders_vector.end());
+    }
 
     
 };
