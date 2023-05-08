@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <iostream>
 #include <string>
+#include <cstdio>
 
 
 void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<std::string, OrderBook>& orderBooks)
@@ -39,20 +40,48 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
 
             }
 
-            // Create and add an order to the order book based off the client message
-            std::string symbol = fix_mapping["55"];
-            int volume = std::stoi(fix_mapping["38"]);
-            Side side = fix_mapping["54"] == "1" ? Side::Buy : Side::Sell;
-            double price = std::stod(fix_mapping["44"]);
-            std::string timestamp = fix_mapping["52"];
-            // Construct Order Object with extracted fields
-            Order order(symbol, volume, side, price, timestamp);
-            // Add Order To Order Book
-            orderBooks[symbol].addOrder(order);
+            // Support New Single Order's and else assume its a cancel order
+            if (fix_mapping["35"] != "F") {
+                // Create and add an order to the order book based off the client message
+                std::string symbol = fix_mapping["55"];
+                int volume = std::stoi(fix_mapping["38"]);
+                Side side = fix_mapping["54"] == "1" ? Side::Buy : Side::Sell;
+                double price = std::stod(fix_mapping["44"]);
+                std::string timestamp = fix_mapping["52"];
+                // Construct Order Object with extracted fields
+                Order order(symbol, volume, side, price, timestamp);
+                // Add Order To Order Book
+                int confirmed_order_id = orderBooks[symbol].addOrder(order); 
+                // Send back order confirmation message
+                std::string response = "Server received: ";
+                std::sprintf(&response[0], "8=FIX.4.2|9=170|35=8|37=%d|11=%s|55=%s|54=%s|38=%d|", confirmed_order_id, fix_mapping["11"].c_str(), symbol.c_str(), fix_mapping["54"].c_str(), volume );
+                boost::asio::write(socket, boost::asio::buffer(response));
 
-            // Write a response back to the client
-            std::string response = "Server received: ";
-            boost::asio::write(socket, boost::asio::buffer(response));
+                
+                
+            }
+            // Case to cancel an order
+            else {
+                std::string symbol = fix_mapping["55"];
+                int volume = std::stoi(fix_mapping["38"]);
+                Side side = fix_mapping["54"] == "1" ? Side::Buy : Side::Sell;
+                double price = std::stod(fix_mapping["44"]);
+                std::string timestamp = fix_mapping["52"];
+                int order_id = std::stoi(fix_mapping["41"]);
+                // Construct Order Object with extracted fields
+                Order order(symbol, volume, side, price, timestamp);
+                order.setId(order_id);
+                // Cancel Order From Order Book
+                orderBooks[symbol].cancelOrder(order);
+
+
+            }
+
+            
+
+            // // Write a response back to the client
+            // std::string response = "Server received: ";
+            // boost::asio::write(socket, boost::asio::buffer(response));
         }
     }
     catch (std::exception& e) {

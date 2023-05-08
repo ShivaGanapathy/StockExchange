@@ -4,6 +4,7 @@
 #include <algorithm>
 #include "order.h"
 #include "orderBook.h"
+#include "side.h"
 
 
 OrderBook::OrderBook() {
@@ -12,30 +13,67 @@ OrderBook::OrderBook() {
 
 OrderBook::OrderBook(std::string symbol) {
     m_symbol = symbol;
-    m_orders = std::vector<Order>();
+    m_current_id = 0;
+    
 };
 
 OrderBook::OrderBook(const OrderBook& other) {
     m_symbol = other.m_symbol;
-    m_orders = other.m_orders;
+    m_buy_orders_vector = other.m_buy_orders_vector;
+    m_sell_orders_vector = other.m_sell_orders_vector;
+    m_buy_orders_pq = other.m_buy_orders_pq;
+    m_sell_orders_pq = other.m_sell_orders_pq;
 };
 
-void OrderBook::addOrder(Order order) {
-    m_orders.push_back(order);
+int OrderBook::addOrder(Order order) {
+
+    order.setId(m_current_id);
+
+    if (order.m_side == Side::Buy) {
+        m_buy_orders_vector.push_back(order);
+        m_buy_orders_pq.push(order);
+
+    }
+    else {
+        m_sell_orders_vector.push_back(order);
+        m_sell_orders_pq.push(order);
+    }
+
+    return m_current_id++;
+    
 };
 
 void OrderBook::cancelOrder(Order order) {
-    auto it = std::remove(m_orders.begin(), m_orders.end(), order);
-    m_orders.erase(it, m_orders.end());
+
+    if (order.m_side == Side::Buy) {
+        auto it = std::remove(m_buy_orders_vector.begin(), m_buy_orders_vector.end(), order);
+        m_buy_orders_vector.erase(it, m_buy_orders_vector.end());
+        
+    }
+    else {
+        auto it = std::remove(m_sell_orders_vector.begin(), m_sell_orders_vector.end(), order);
+        m_sell_orders_vector.erase(it, m_sell_orders_vector.end());
+    }
+
+    m_canceled_order_ids.insert(order.m_id);
+
+    std::cout << "We cancelled the order with id " << std::to_string(order.m_id);
+
+    
 };
 
 int OrderBook::numOrders() {
-    return m_orders.size();
+    return m_buy_orders_vector.size() + m_sell_orders_vector.size();
 }
 
 std::ostream& operator<<(std::ostream& os, const OrderBook& ob) {
-    os << ob.m_symbol << " Orders:\n";
-    for (const auto& order : ob.m_orders) {
+    os << ob.m_symbol << "Buy Orders:\n";
+    for (const auto& order : ob.m_buy_orders_vector) {
+        os << order;
+    }
+    os << "\n";
+    os << ob.m_symbol << "Sell Orders:\n";
+    for (const auto& order : ob.m_sell_orders_vector) {
         os << order;
     }
     os << "\n";

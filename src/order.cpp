@@ -5,7 +5,7 @@
 #include "side.h"
 
 Order::Order(std::string symbol, int volume, Side side, double price, std::string timestamp )
-    : m_symbol(symbol), m_volume(volume), m_side(side), m_price(price), m_timestamp(timestamp) {}
+    : m_symbol(symbol), m_volume(volume), m_side(side), m_price(price), m_timestamp(timestamp), m_id(-1) {}
 
 bool Order::operator==(const Order& other) const {
     return (m_symbol == other.m_symbol &&
@@ -15,7 +15,11 @@ bool Order::operator==(const Order& other) const {
             m_timestamp == other.m_timestamp);
 }
 
+void Order::setId(int id) {
+    m_id = id;
+}
+
 std::ostream& operator<<(std::ostream& os, const Order& order) {
-    os << "Symbol: " << order.m_symbol << ", Volume: " << order.m_volume << ", Side: " << order.m_side << ", Price: " << order.m_price << ", Timestamp: " << order.m_timestamp << std::endl;
+    os << "Symbol: " << order.m_symbol << ", Volume: " << order.m_volume << ", Side: " << order.m_side << ", Price: " << order.m_price << ", Timestamp: " << order.m_timestamp <<  " Id: " << order.m_id << std::endl;
     return os;
 }

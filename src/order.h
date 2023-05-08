@@ -11,7 +11,9 @@ public:
     Side m_side;
     double m_price;
     std::string m_timestamp;
+    int m_id;
     Order(std::string symbol, int volume, Side side, double price, std::string timestamp );
+    void setId(int id);
     bool operator==(const Order& other) const;
     friend std::ostream& operator<<(std::ostream& os, const Order& order);
 };
