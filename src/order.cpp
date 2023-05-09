@@ -1,11 +1,13 @@
 #include <ctime>
 #include <string>
 #include <iostream>
+#include <boost/asio.hpp>
 #include "order.h"
 #include "side.h"
 
-Order::Order(std::string symbol, int volume, Side side, double price, std::string timestamp )
-    : m_symbol(symbol), m_volume(volume), m_side(side), m_price(price), m_timestamp(timestamp), m_id(-1) {}
+Order::Order(std::string symbol, int volume, Side side, double price, std::string timestamp, boost::reference_wrapper<boost::asio::ip::tcp::socket> socket )
+    : m_symbol(symbol), m_volume(volume), m_side(side), m_price(price), m_timestamp(timestamp), m_id(-1), m_socket(socket) {}
+    
 
 bool Order::operator==(const Order& other) const {
     return (m_symbol == other.m_symbol &&

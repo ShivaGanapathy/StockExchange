@@ -3,7 +3,9 @@
 #include "side.h"
 #include <unordered_map>
 #include <iostream>
+#include <boost/ref.hpp>
 #include <string>
+#include <mutex>
 #include <cstdio>
 
 
@@ -48,14 +50,17 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
                 Side side = fix_mapping["54"] == "1" ? Side::Buy : Side::Sell;
                 double price = std::stod(fix_mapping["44"]);
                 std::string timestamp = fix_mapping["52"];
+                
                 // Construct Order Object with extracted fields
-                Order order(symbol, volume, side, price, timestamp);
+                Order order(symbol, volume, side, price, timestamp, boost::ref(socket));
                 // Add Order To Order Book
                 int confirmed_order_id = orderBooks[symbol].addOrder(order); 
+                //std::cout << "hello?:" << (order.m_socket.get() == socket) << std::endl;
                 // Send back order confirmation message
-                std::string response = "Server received: ";
+                
+                std::string response;
                 std::sprintf(&response[0], "8=FIX.4.2|9=170|35=8|37=%d|11=%s|55=%s|54=%s|38=%d|", confirmed_order_id, fix_mapping["11"].c_str(), symbol.c_str(), fix_mapping["54"].c_str(), volume );
-                boost::asio::write(socket, boost::asio::buffer(response));
+                //boost::asio::write(socket, boost::asio::buffer(response));
 
                 
                 
@@ -69,7 +74,7 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
                 std::string timestamp = fix_mapping["52"];
                 int order_id = std::stoi(fix_mapping["41"]);
                 // Construct Order Object with extracted fields
-                Order order(symbol, volume, side, price, timestamp);
+                Order order(symbol, volume, side, price, timestamp, boost::ref(socket));
                 order.setId(order_id);
                 // Cancel Order From Order Book
                 orderBooks[symbol].cancelOrder(order);

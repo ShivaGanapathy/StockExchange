@@ -7,6 +7,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <thread>
+#include <boost/ref.hpp>
 #include "orderBook.h"
 #include "order.h"
 #include "side.h"
@@ -39,8 +40,13 @@ int main() {
         threads.emplace_back(std::thread(matching_engine, x ));
     }
 
+    // Create a throwaway socket to create a dummy order
+    boost::asio::io_service throwaway_io_service;
+    boost::asio::ip::tcp::socket throwaway_socket(throwaway_io_service);
+
+
     // Try creating a new Order
-    Order order("AAPL", 10, Side::Buy, 50.14, "NOW" );
+    Order order("AAPL", 10, Side::Buy, 50.14, "NOW", boost::ref(throwaway_socket) );
 
     // Try adding an order into an orderBook
     orderBooks["AAPL"].addOrder(order);
