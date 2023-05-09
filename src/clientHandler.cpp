@@ -18,10 +18,24 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
         while (true) {
 
             // Read data from the socket
-            char data[143];
+            std::vector<char> data(20);
             size_t length = socket.read_some(boost::asio::buffer(data));
-            std::string message(data, length);
+            std::string message(data.begin(), data.begin() + length);
+            size_t start_pos = message.find("|9=");
+            size_t end_pos = message.find("|", start_pos + 1);
+            std::string str_num_bytes = message.substr(start_pos + 3, end_pos - start_pos - 3);
+            int num_bytes = std::stoi(str_num_bytes);
+            int num_remaining_bytes = num_bytes - length;
+
+            std::cout << "NEEED: " << num_remaining_bytes << std::endl;
+
+            std::vector<char> remaining(num_remaining_bytes);
+            length = socket.read_some(boost::asio::buffer(remaining));
+            std::string remaining_string(remaining.begin(), remaining.begin() + length);
+            message += remaining_string;
+
             std::cout << "We got: " << message << std::endl;
+
 
 
             // For this specific FIX Message, create a mapping from code to value
