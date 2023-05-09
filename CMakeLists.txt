@@ -11,6 +11,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 # Add source files for server
 set(SERVER_SOURCES
+    ../src/socketService.cpp
     ../src/side.cpp
     ../src/order.cpp
     ../src/orderBook.cpp

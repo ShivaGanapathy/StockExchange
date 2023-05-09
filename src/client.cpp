@@ -18,17 +18,14 @@ int main() {
 
     while (true) {
         // Message to create an new buy order
-        std::string message = "8=FIX.4.4|9=110|35=D|34=1|49=CLIENT1|52=20130204-22:44:16.468|56=CME|11=ORDER0001|21=1|55=AAPL|54=1|38=100|40=2|44=123.45|59=0|10=1360028651|\n";
+        std::string message = "\n8=FIX.4.4|9=110|35=D|34=1|49=CLIENT1|52=20130204-22:44:16.468|56=CME|11=ORDER0001|21=1|55=AAPL|54=1|38=100|40=2|44=123.45|59=0|10=1360028651|\n";
         boost::asio::write(socket, boost::asio::buffer(message));
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        
 
-        // Message to create an new buy order
-        message = "8=FIX.4.4|9=110|35=D|34=1|49=CLIENT1|52=20130204-22:44:16.468|56=CME|11=ORDER0001|21=1|55=AAPL|54=1|38=50|40=2|44=123.55|59=0|10=1360028651|\n";
-        boost::asio::write(socket, boost::asio::buffer(message));
-        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // Message to create an new sell order
-        message = "8=FIX.4.4|9=110|35=D|34=1|49=CLIENT1|52=20130204-22:44:16.468|56=CME|11=ORDER0001|21=1|55=AAPL|54=2|38=150|40=2|44=123.45|59=0|10=1360028651|\n";
+        message = "\n8=FIX.4.4|9=110|35=D|34=1|49=CLIENT1|52=20130204-22:44:16.468|56=CME|11=ORDER0001|21=1|55=AAPL|54=2|38=100|40=2|44=123.45|59=0|10=1360028651|\n";
+        
         boost::asio::write(socket, boost::asio::buffer(message));
 
         // Wait for a response from the server
@@ -36,7 +33,9 @@ int main() {
         size_t length = socket.read_some(boost::asio::buffer(response));
         std::cout << std::string(response, response + length) << std::endl;
 
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        
         
 
 

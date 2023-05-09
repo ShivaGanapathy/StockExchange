@@ -7,22 +7,28 @@
 #include <string>
 #include <mutex>
 #include <cstdio>
-
+#include "socketService.h"
 
 void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<std::string, OrderBook>& orderBooks)
 {
     try {
+        // Create a socket service that provides synchronization between multithreaded socket reads and writes
+        SocketService socket_service(boost::ref(socket));
+
         while (true) {
+
             // Read data from the socket
-            char data[1024];
+            char data[143];
             size_t length = socket.read_some(boost::asio::buffer(data));
+            std::string message(data, length);
+            std::cout << "We got: " << message << std::endl;
 
 
             // For this specific FIX Message, create a mapping from code to value
             std::unordered_map<std::string, std::string> fix_mapping;
 
             // Handle the received message
-            std::string message(data, length);
+            // std::string message(data, length);
             //std::cout << "Received: " << message << std::endl;
             std::vector<std::string> substrings;
             std::istringstream iss(message);
@@ -52,14 +58,16 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
                 std::string timestamp = fix_mapping["52"];
                 
                 // Construct Order Object with extracted fields
-                Order order(symbol, volume, side, price, timestamp, boost::ref(socket));
+                Order order(symbol, volume, side, price, timestamp, &socket_service);
                 // Add Order To Order Book
                 int confirmed_order_id = orderBooks[symbol].addOrder(order); 
                 //std::cout << "hello?:" << (order.m_socket.get() == socket) << std::endl;
                 // Send back order confirmation message
                 
                 std::string response;
-                std::sprintf(&response[0], "8=FIX.4.2|9=170|35=8|37=%d|11=%s|55=%s|54=%s|38=%d|", confirmed_order_id, fix_mapping["11"].c_str(), symbol.c_str(), fix_mapping["54"].c_str(), volume );
+                std::sprintf(&response[0], "8=FIX.4.2|9=170|35=8|37=%d|11=%s|55=%s|54=%s|38=%d|\n", confirmed_order_id, fix_mapping["11"].c_str(), symbol.c_str(), fix_mapping["54"].c_str(), volume );
+                
+                socket_service.writeMessage(response);
                 //boost::asio::write(socket, boost::asio::buffer(response));
 
                 
@@ -74,7 +82,7 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
                 std::string timestamp = fix_mapping["52"];
                 int order_id = std::stoi(fix_mapping["41"]);
                 // Construct Order Object with extracted fields
-                Order order(symbol, volume, side, price, timestamp, boost::ref(socket));
+                Order order(symbol, volume, side, price, timestamp, &socket_service);
                 order.setId(order_id);
                 // Cancel Order From Order Book
                 orderBooks[symbol].cancelOrder(order);
@@ -90,6 +98,7 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
         }
     }
     catch (std::exception& e) {
-        std::cout << "Client connection closed\n";
+        std::cout << e.what() << std::endl;
+        std::cout << "Client connection closed" << std::endl;
     }
 }

@@ -3,6 +3,7 @@
 #include <ctime>
 #include <string>
 #include "side.h"
+#include "socketService.h"
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/ref.hpp>
 #include <memory>
@@ -15,9 +16,10 @@ public:
     double m_price;
     std::string m_timestamp;
     int m_id;
-    boost::reference_wrapper<boost::asio::ip::tcp::socket> m_socket;
+    SocketService* m_socket_service;
 
-    Order(std::string symbol, int volume, Side side, double price, std::string timestamp, boost::reference_wrapper<boost::asio::ip::tcp::socket> socket);
+    Order(std::string symbol, int volume, Side side, double price, std::string timestamp, SocketService* socket_service);
+    Order& operator=(const Order& other) = default;
     void setId(int id);
     bool operator==(const Order& other) const;
     friend std::ostream& operator<<(std::ostream& os, const Order& order);

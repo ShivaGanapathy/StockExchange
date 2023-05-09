@@ -37,10 +37,14 @@ void matching_engine(OrderBook& orderBook) {
             std::cout << "Match! betweeen: " << bid << "\n" << ask << std::endl;
     
             std::string response = "Your buy order of id " + std::to_string(bid.m_id) +   " was matched!\n";
-            boost::asio::write(bid.m_socket.get(), boost::asio::buffer(response));
+            
+            bid.m_socket_service->writeMessage(response);
+            //boost::asio::write(bid.m_socket_.get(), boost::asio::buffer(response));
             
             response =  "Your sell order of id " + std::to_string(ask.m_id) +   " was matched!\n";
-            boost::asio::write(ask.m_socket.get(), boost::asio::buffer(response));
+           
+            ask.m_socket_service->writeMessage(response);
+            //boost::asio::write(ask.m_socket.get(), boost::asio::buffer(response));
 
 
             // If any order only partially filled, reinsert order into the pq after subtracting the matching volume

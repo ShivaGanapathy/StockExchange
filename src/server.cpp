@@ -13,6 +13,7 @@
 #include "side.h"
 #include "clientHandler.h"
 #include "matchingEngine.h"
+#include "socketService.h"
 
 using namespace boost::asio;
 using ip::tcp;
@@ -40,16 +41,17 @@ int main() {
         threads.emplace_back(std::thread(matching_engine, x ));
     }
 
-    // Create a throwaway socket to create a dummy order
+    // Create a throwaway socket service to create a dummy order
     boost::asio::io_service throwaway_io_service;
     boost::asio::ip::tcp::socket throwaway_socket(throwaway_io_service);
+    //SocketService socket_service(boost::ref(throwaway_socket));
 
 
     // Try creating a new Order
-    Order order("AAPL", 10, Side::Buy, 50.14, "NOW", boost::ref(throwaway_socket) );
+    // Order order("AAPL", 10, Side::Buy, 50.14, "NOW", &socket_service );
 
-    // Try adding an order into an orderBook
-    orderBooks["AAPL"].addOrder(order);
+    // // Try adding an order into an orderBook
+    // orderBooks["AAPL"].addOrder(order);
 
     // Begin TCP server
     // Create an IO context
