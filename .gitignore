@@ -1,1 +1,8 @@
 .DS_Store
+.a
+.o
+server
+.vscode/
+/build
+
+
