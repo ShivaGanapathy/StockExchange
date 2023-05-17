@@ -33,7 +33,7 @@ int main() {
         size_t length = socket.read_some(boost::asio::buffer(response));
         std::cout << std::string(response, response + length) << std::endl;
 
-        //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::seconds(2));
 
         
         

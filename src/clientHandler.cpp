@@ -27,14 +27,11 @@ void handle_connection(boost::asio::ip::tcp::socket socket, std::unordered_map<s
             int num_bytes = std::stoi(str_num_bytes);
             int num_remaining_bytes = num_bytes - length;
 
-            std::cout << "NEEED: " << num_remaining_bytes << std::endl;
-
             std::vector<char> remaining(num_remaining_bytes);
             length = socket.read_some(boost::asio::buffer(remaining));
             std::string remaining_string(remaining.begin(), remaining.begin() + length);
             message += remaining_string;
 
-            std::cout << "We got: " << message << std::endl;
 
 
 
