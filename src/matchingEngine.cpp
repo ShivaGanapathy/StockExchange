@@ -34,9 +34,9 @@ void matching_engine(OrderBook& orderBook) {
             int matching_volume = std::min(bid.m_volume, ask.m_volume);
 
             // Create a match object to send to both the bidder and seller
-            std::cout << "Match! betweeen: " << bid << "\n" << ask << std::endl;
+            std::cout << "Match! betweeen: \n" << bid << "\n" << ask << std::endl;
     
-            std::string response = "Your buy order of id " + std::to_string(bid.m_id) +   " was matched!\n";
+            std::string response = "\nYour buy order of id " + std::to_string(bid.m_id) +   " was matched!\n";
             
             bid.m_socket_service->writeMessage(response);
             //boost::asio::write(bid.m_socket_.get(), boost::asio::buffer(response));
